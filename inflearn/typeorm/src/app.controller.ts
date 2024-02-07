@@ -28,7 +28,47 @@ export class AppController {
 
   @Get('users')
   async getUsers() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      // 어떤 프로퍼티를 가져올지
+      // 지정하지 않으면 기본적으로 모든 프로퍼티를 가져온다.
+      // 지정하면 지정된 프로퍼티만 가져온다. (eager: true로 설정하면 기본적으로 가져온다.)
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        version: true,
+        profile: {
+          id: true,
+        },
+      },
+      // 필터링할 조건 설정, && 조건으로 설정된다.
+      // || 조건으로 설정하려면 리스트로 설정해야 한다.
+      where: [
+        {
+          profile: {
+            id: 4,
+          },
+        },
+        {
+          version: 1,
+        },
+      ],
+
+      // 관계 가져오는 설정 (eager: true로 설정하면 기본적으로 가져온다.)
+      // select나 where와 같이 사용할 수 있다.
+      relations: {
+        profile: true,
+      },
+      // 정렬 설정
+      // id: 'ASC' 또는 id: 'DESC'로 설정할 수 있다.
+      order: {
+        id: 'ASC',
+      },
+      // 건너뛸 데이터의 개수 설정
+      skip: 0,
+      // 가져올 데이터의 개수 설정
+      take: 10,
+    });
   }
 
   @Patch('users/:id')
@@ -41,6 +81,7 @@ export class AppController {
 
     return this.userRepository.save({
       ...user,
+      email: user.email + '0',
     });
   }
 

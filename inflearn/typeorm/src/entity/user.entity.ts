@@ -76,7 +76,7 @@ export class UserModel {
 
   @OneToOne(() => ProfileModel, (profile) => profile.user, {
     // find()를 실행할 때마다 항상 같이 가져오는 relation 설정, 기본값 false
-    eager: true,
+    eager: false,
     // user가 저장될 때 같이 저장되고, user가 삭제될 때 같이 삭제하는 설정, 기본값 false
     cascade: true,
     // null 값이 허용되는지 여부, 기본값 true
