@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
+import { ProfileModel } from './profile.entity';
 
 export enum Role {
   USER = 'user',
@@ -21,6 +23,7 @@ export class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
+  /*
   @Column({
     // DB에서 인지하는 칼럼 타입, 자동으로 유추됨.
     type: 'varchar',
@@ -40,6 +43,9 @@ export class UserModel {
     unique: false,
   })
   title: string;
+  */
+  @Column()
+  email: string;
 
   @Column({
     type: 'enum',
@@ -65,4 +71,7 @@ export class UserModel {
   @Column()
   @Generated('uuid')
   additionalId: number;
+
+  @OneToOne(() => ProfileModel, (profile) => profile.user)
+  profile: ProfileModel;
 }
