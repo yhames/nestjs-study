@@ -1,7 +1,20 @@
 import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel, Role } from './entity/user.entity';
-import { Repository } from 'typeorm';
+import {
+  Between,
+  Equal,
+  ILike,
+  In,
+  IsNull,
+  LessThan,
+  LessThanOrEqual,
+  Like,
+  MoreThan,
+  MoreThanOrEqual,
+  Not,
+  Repository,
+} from 'typeorm';
 import { ProfileModel } from './entity/profile.entity';
 import { PostModel } from './entity/post.entity';
 import { TagModel } from './entity/tag.entity';
@@ -21,14 +34,17 @@ export class AppController {
 
   @Post('users')
   async createUser() {
-    return this.userRepository.save({
-      role: Role.USER,
-    });
+    for (let i = 0; i < 100; i++) {
+      await this.userRepository.save({
+        email: `user-${i}@naver.com`,
+      });
+    }
   }
 
   @Get('users')
   async getUsers() {
     return this.userRepository.find({
+      /*
       // 어떤 프로퍼티를 가져올지
       // 지정하지 않으면 기본적으로 모든 프로퍼티를 가져온다.
       // 지정하면 지정된 프로퍼티만 가져온다. (eager: true로 설정하면 기본적으로 가져온다.)
@@ -43,17 +59,34 @@ export class AppController {
       },
       // 필터링할 조건 설정, && 조건으로 설정된다.
       // || 조건으로 설정하려면 리스트로 설정해야 한다.
-      where: [
-        {
-          profile: {
-            id: 4,
-          },
-        },
-        {
-          version: 1,
-        },
-      ],
-
+      */
+      where: {
+        /**
+         * Not(): 아닌 경우 가져오기
+         * LessThan(): 작은 경우 가져오기
+         * LessThanOrEqual(): 작거나 같은 경우 가져오기
+         * MoreThan(): 큰 경우 가져오기
+         * MoreThanOrEqual(): 크거나 같은 경우 가져오기
+         * Equal(): 같은 경우 가져오기
+         * Like(): 비슷한 경우 가져오기, %로 와일드카드 사용
+         * ILike(): 대소문자 구분 없이 비슷한 경우 가져오기, %로 와일드카드 사용
+         * Between(): 사이에 있는 경우 가져오기
+         * In(): 리스트에 있는 경우 가져오기
+         * IsNull(): null인 경우 가져오기
+         */
+        // id: Not(2),
+        // id: LessThan(10),
+        // id: LessThanOrEqual(10),
+        // id: MoreThan(90),
+        // id: MoreThanOrEqual(90),
+        // id: Equal(21),
+        // email: Like('user-1%'),
+        // email: ILike('USER-2%'),
+        // id: Between(10, 20),
+        // id: In([1, 25, 54, 78, 99]),
+        // id: IsNull(),
+      },
+      /*
       // 관계 가져오는 설정 (eager: true로 설정하면 기본적으로 가져온다.)
       // select나 where와 같이 사용할 수 있다.
       relations: {
@@ -68,6 +101,7 @@ export class AppController {
       skip: 0,
       // 가져올 데이터의 개수 설정
       take: 10,
+      */
     });
   }
 
