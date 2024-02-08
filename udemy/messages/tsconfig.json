@@ -3,8 +3,8 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "experimentalDecorators": true, // 데코레이터 사용 여부
+    "emitDecoratorMetadata": true,  // ts -> js 변환시 데코레이터 메타데이터를 보존할 것인지 여부
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
