@@ -41,6 +41,94 @@ export class AppController {
     }
   }
 
+  @Post('sample')
+  async sample() {
+    // create : 모델에 해당되는 객체 생성 - 저장은 안됨
+    // const user = this.userRepository.create({
+    //   email: 'sample@naver.com',
+    // });
+
+    // save : 모델에 해당되는 객체 생성 - 저장됨
+    // const user = await this.userRepository.save({
+    //   email: 'sample@naver.com',
+    // });
+
+    // preload : 입력된 값을 기준으로 데이터를 가져오고, 추가 입력된 값으로 업데이트 - 저장은 안됨
+    // const user = await this.userRepository.preload({
+    //   id: 101,
+    //   email: 'this is preload',
+    // });
+
+    // delete : 삭제
+    // await this.userRepository.delete({
+    //   id: 101,
+    // });
+
+    // increment() : 해당하는 컬럼의 값을 증가시킨다.
+    //   * condition에 해당하는 데이터를 찾아서 propertyPath의 값을 value 만큼 증가시킨다.
+    // await this.userRepository.increment(
+    //   {
+    //     id: 1,
+    //   },
+    //   'count',
+    //   10,
+    // );
+
+    // decrement() : 해당하는 컬럼의 값을 감소시킨다.
+    //   * condition에 해당하는 데이터를 찾아서 propertyPath의 값을 value 만큼 감소시킨다.
+    // await this.userRepository.decrement(
+    //   {
+    //     id: 1,
+    //   },
+    //   'count',
+    //   10,
+    // );
+
+    // count() : 데이터의 개수를 가져온다.
+    // const count = await this.userRepository.count({
+    //   where: {
+    //     email: ILike('user%'),
+    //   },
+    // });
+
+    // sum() : 데이터의 합을 가져온다.
+    // const sum = await this.userRepository.sum('count', {
+    //   email: ILike('user%'),
+    // });
+
+    // average() : 데이터의 평균을 가져온다.
+    // const average = await this.userRepository.average('count', {
+    //   id: LessThan(10),
+    // });
+
+    // minimum() : 데이터의 최소값을 가져온다.
+    // const min = await this.userRepository.minimum('count', {
+    //   id: LessThan(10),
+    // });
+
+    // maximum() : 데이터의 최대값을 가져온다.
+    // const max = await this.userRepository.maximum('count', {
+    //   id: LessThan(10),
+    // });
+
+    // find() : 데이터와 데이터의 개수를 가져온다.
+    // const users = await this.userRepository.find();
+
+    // findOne() : 데이터를 가져온다.
+    // const user = await this.userRepository.findOne({
+    //   where: {
+    //     id: 3,
+    //   },
+    // });
+
+    // findAndCount() : 데이터와 데이터의 개수를 가져온다. (take와 skip을 사용할 수 있다.) => 페이징
+    const usersAndCount = await this.userRepository.findAndCount({
+      take: 3,
+    });
+
+    return usersAndCount;
+  }
+
   @Get('users')
   async getUsers() {
     return this.userRepository.find({
