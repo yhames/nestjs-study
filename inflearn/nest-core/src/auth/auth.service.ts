@@ -37,7 +37,6 @@ export class AuthService {
 
   /**
    * 회원가입
-   * @Todo hash
    */
   async registerWithEmail(
     user: Pick<UsersModel, 'email' | 'nickname' | 'password'>,
