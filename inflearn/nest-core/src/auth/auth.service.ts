@@ -11,6 +11,51 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
   ) {}
+
+  /**
+   * 토큰을 사용하는 방식
+   * 1. 사용자가 로그인 또는 회원가입을 진행하면 access token과 refresh token을 발급 받는다.
+   * 2. 로그인할 때는 **Basic 토큰**과 함께 요청을 보낸다. (Basic 토큰: '이메일:비밀번호'를 base64로 인코딩한 값)
+   *    - {Authorization: `Basic ${token}`}
+   * 3. 아무나 접근할 수 없는 정보(private route)에 접근할 때는 **accessToken**을 Header에 추가해서 함께 요청한다.
+   *    - {Authorization: `Bearer ${token}`}
+   * 4. 토큰과 요청을 함께 받은 서버는 토큰 검증을 통해 현재 요청을 보낸 사용자가 누구인지 알 수 있다.
+   * 5. 토큰이 만료되면 refreshToken을 사용해서 새로운 토큰을 발급 받는다. (그렇지 않으면 `jwtService.verify()`에서 에러가 발생한다)
+   *    따라서 accessToken을 새로 발급받는 /auth/token/access 기능과
+   *    refreshToken을 새로 발급받는 /auth/token/refresh 기능이 필요하다.
+   * 6. 토큰이 만료되면 각각의 토큰을 재발급 받는 엔트포인트를 통해 새로운 토큰을 발급 받고
+   *    새로운 토큰을 사용해서 private route에 접근한다.
+   */
+
+  /**
+   * Header로 받는 토큰
+   * 1. Authorization: `Basic ${token}`
+   * 2. Authorization: `Bearer ${accessToken}`
+   */
+  extractTokenFromHeader(header: string, isBearer: boolean) {
+    const splitToken = header.split(' ');
+    const prefix = isBearer ? 'Bearer' : 'Basic';
+    if (splitToken.length !== 2 || splitToken[0] !== prefix) {
+      throw new UnauthorizedException('토큰이 올바르지 않습니다.');
+    }
+    return splitToken[1];
+  }
+
+  /**
+   * Basic 토큰을 디코딩하는 로직
+   * 1. YWRtaW5AZ21haWwuY29tOmFkbWlu -> email:password
+   * 2. email:password -> [email, password]
+   * 3. [email, password] -> {email: email, password: password}
+   */
+  decodeBasicToken(base64String: string) {
+    const decoded = Buffer.from(base64String, 'base64').toString('utf8');
+    const split = decoded.split(':');
+    if (split.length !== 2) {
+      throw new UnauthorizedException('토큰이 올바르지 않습니다.');
+    }
+    return { email: split[0], password: split[1] };
+  }
+
   /**
    * 기능
    * 1. registerWithEmail
