@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
@@ -24,11 +25,16 @@ export class PostsController {
     return this.postsService.getPostById(id);
   }
 
+  /**
+   * `ParseIntPipe`는 `Nest Container`에서 `Inject`하는 반면,
+   * `DefaultValuePipe`는 직접 객체를 생성해서 사용한다.
+   */
   @Post()
   async createPost(
     @Body('authorId') authorId: number,
     @Body('title') title: string,
     @Body('content') content: string,
+    @Body('isPublic', new DefaultValuePipe(true)) isPublic: boolean,
   ) {
     return this.postsService.createPost(authorId, title, content);
   }
