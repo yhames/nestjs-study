@@ -1,3 +1,9 @@
+# Auth Flow
+
+```mermaid
+---
+title: Issue Jwt Flow
+---
 flowchart TD
     Client --> A[register/email] & B[login/email] & C[toekn/access] & D[token/refresh]
     loginUser --> signToken --> jwtService.sign
@@ -7,3 +13,4 @@ flowchart TD
     B --> extractTokenHeader --> decodeBasicToken --> loginWithEmail --> authenticateWithEmailAndPassword --> loginUser
     C --> extractTokenFromHeader
     D --> extractTokenFromHeader
+```
