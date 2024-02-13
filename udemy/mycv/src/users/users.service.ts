@@ -17,6 +17,11 @@ export class UsersService {
 
   async create(email: string, password: string) {
     const user = this.usersRepository.create({ email, password });
+    /**
+     * create() 메서드로 새로운 Entity 인스턴스를 생성하지 않으면
+     * TypeORM Hooks와 같은 기능을 사용할 수 없다.
+     * 마찬가지로 insert(), update() 혹은 delete() 메서드를 사용하면 TypeORM Hooks를 사용할 수 없다.
+     */
     return this.usersRepository.save(user);
   }
 }
