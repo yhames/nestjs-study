@@ -10,6 +10,6 @@ flowchart TD
     B --> BearerTokenGuard
     C --> BearerTokenGuard
     BearerTokenGuard --> extractTokenFromHeader --> verifyToken --> getUserByEmail -- req.user, req.token, req.tokenType --> ret[result]
-    ret[result] --> c2[canActivate] --> fc[req.tokenType === 'access'] --> ret1[return result]
-    ret[result] --> c3[canActivate] --> fs[req.tokenType === 'refresh'] --> ret2[return result]
+    ret[result] --> c2[canActivate] --> fc["req.tokenType === 'access'"] --> ret1[return result]
+    ret[result] --> c3[canActivate] --> fs["req.tokenType === 'refresh'"] --> ret2[return result]
 ```
