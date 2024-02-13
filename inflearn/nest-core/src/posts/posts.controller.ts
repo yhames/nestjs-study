@@ -36,12 +36,12 @@ export class PostsController {
   @Post()
   @UseGuards(AccessTokenGuard)
   async createPost(
-    @User() user: UsersModel, // `AccessTokenGuard`을 통해 `request`에 저장된 `user`를 가져온다.
+    @User('id') userId: number, // `AccessTokenGuard`을 통해 `request`에 저장된 `user`를 가져온다.
     @Body('title')
     title: string,
     @Body('content') content: string,
   ) {
-    return this.postsService.createPost(user.id, title, content);
+    return this.postsService.createPost(userId, title, content);
   }
 
   @Put(':id')
