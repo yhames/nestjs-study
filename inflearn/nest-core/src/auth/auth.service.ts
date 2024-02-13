@@ -59,7 +59,7 @@ export class AuthService {
   /**
    * 토큰 검증
    */
-  verifyToken(token: string) {
+  async verifyToken(token: string) {
     return this.jwtService.verify(token, {
       secret: JWT_SECRET,
     });
