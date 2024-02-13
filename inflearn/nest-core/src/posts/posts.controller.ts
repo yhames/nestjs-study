@@ -1,15 +1,17 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
+import { AccessTokenGuard } from '../auth/guard/bearer-token.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -30,12 +32,14 @@ export class PostsController {
    * `DefaultValuePipe`는 직접 객체를 생성해서 사용한다.
    */
   @Post()
+  @UseGuards(AccessTokenGuard)
   async createPost(
-    @Body('authorId') authorId: number,
-    @Body('title') title: string,
+    @Request() req: any,
+    @Body('title')
+    title: string,
     @Body('content') content: string,
-    @Body('isPublic', new DefaultValuePipe(true)) isPublic: boolean,
   ) {
+    const authorId = req.user.id; // `AccessTokenGuard`에서 `user`를 보장하므로 예외처리를 하지 않아도 된다.
     return this.postsService.createPost(authorId, title, content);
   }
 
