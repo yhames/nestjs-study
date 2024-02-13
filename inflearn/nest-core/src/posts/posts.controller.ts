@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AccessTokenGuard } from '../auth/guard/bearer-token.guard';
+import { UsersModel } from '../users/entities/users.entity';
+import { User } from '../users/decorator/users.decorator';
 
 @Controller('posts')
 export class PostsController {
@@ -34,13 +36,12 @@ export class PostsController {
   @Post()
   @UseGuards(AccessTokenGuard)
   async createPost(
-    @Request() req: any,
+    @User() user: UsersModel, // `AccessTokenGuard`을 통해 `request`에 저장된 `user`를 가져온다.
     @Body('title')
     title: string,
     @Body('content') content: string,
   ) {
-    const authorId = req.user.id; // `AccessTokenGuard`에서 `user`를 보장하므로 예외처리를 하지 않아도 된다.
-    return this.postsService.createPost(authorId, title, content);
+    return this.postsService.createPost(user.id, title, content);
   }
 
   @Put(':id')
