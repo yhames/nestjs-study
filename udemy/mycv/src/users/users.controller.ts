@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -22,7 +23,11 @@ export class UsersController {
 
   @Get('/:id')
   async findUser(@Param('id') id: string) {
-    return this.usersService.findOne(parseInt(id, 10));
+    const user = await this.usersService.findOne(parseInt(id, 10));
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
   }
 
   @Get('/:email')
