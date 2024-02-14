@@ -12,6 +12,7 @@ import {
 import { PostsService } from './posts.service';
 import { AccessTokenGuard } from '../auth/guard/bearer-token.guard';
 import { User } from '../users/decorator/users.decorator';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -33,13 +34,11 @@ export class PostsController {
    */
   @Post()
   @UseGuards(AccessTokenGuard)
-  async createPost(
+  async postPosts(
     @User('id') userId: number, // `AccessTokenGuard`을 통해 `request`에 저장된 `user`를 가져온다.
-    @Body('title')
-    title: string,
-    @Body('content') content: string,
+    @Body() body: CreatePostDto,
   ) {
-    return this.postsService.createPost(userId, title, content);
+    return this.postsService.createPost(userId, body);
   }
 
   @Put(':id')
