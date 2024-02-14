@@ -7,12 +7,10 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AccessTokenGuard } from '../auth/guard/bearer-token.guard';
-import { UsersModel } from '../users/entities/users.entity';
 import { User } from '../users/decorator/users.decorator';
 
 @Controller('posts')
