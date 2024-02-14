@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
@@ -45,7 +45,14 @@ export class UsersService {
      */
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
-      throw new Error('User not found');
+      /**
+       * NotFoundException 클래스는 @nestjs/common 패키지에서 제공하는 예외 클래스이다.
+       * 이 클래스는 HttpException 클래스를 상속받아서 구현되어 있다.
+       * 즉, NotFoundException는 Http에 대한 의존성이 있다.
+       * 따라서 WebSocket이나 GRPC 같은 다른 프로토콜을 사용하는 경우에는
+       * 커스텀 예외 필터를 구현해서 NotFoundException를 처리해야 한다.
+       */
+      throw new NotFoundException();
     }
     Object.assign(user, attrs); // user 객체에 attrs 객체의 프로퍼티를 병합한다.
     /**
@@ -59,7 +66,7 @@ export class UsersService {
   async remove(id: number) {
     const user = await this.usersRepository.findOneBy({ id });
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException();
     }
     /**
      * remove() 메서드 또한 save() 메서드와 마찬가지로
