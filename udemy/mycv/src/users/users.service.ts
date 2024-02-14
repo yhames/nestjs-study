@@ -24,4 +24,48 @@ export class UsersService {
      */
     return this.usersRepository.save(user);
   }
+
+  async findOne(id: number) {
+    return this.usersRepository.findOneBy({ id });
+  }
+
+  async find(email: string) {
+    return this.usersRepository.find({ where: { email } });
+  }
+
+  /**
+   * Partial<>은 TypeScript에서 제공하는 타입 헬퍼이다.
+   * Partial<User>를 사용하면 User Entity의 프로퍼티 중 일부만 정의할 수 있다.
+   */
+  async update(id: number, attrs: Partial<User>) {
+    /**
+     * update() 메서드는 Entity를 사용하지 않고 데이터베이스에 직접 쿼리를 보낸다.
+     * 반면에 save() 메서드는 Entity를 사용하여 데이터베이스에 쿼리를 보낸다.
+     * 따라서 update() 메서드를 사용하면 TypeORM Hooks를 사용할 수 없다.
+     */
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    Object.assign(user, attrs); // user 객체에 attrs 객체의 프로퍼티를 병합한다.
+    /**
+     * save() 메서드는 Entity 객체를 사용해야하므로
+     * findOne() 메서드를 사용하여 데이터베이스에 쿼리를 보내야한다.
+     * 따라서 TypeORM Hooks를 사용하지 않는 경우에는 update() 메서드를 사용하는 것이 성능 상 이점이 있다.
+     */
+    return this.usersRepository.save(user);
+  }
+
+  async remove(id: number) {
+    const user = await this.usersRepository.findOneBy({ id });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    /**
+     * remove() 메서드 또한 save() 메서드와 마찬가지로
+     * findOne() 메서드를 사용하여 데이터베이스에 쿼리를 보내기 때문에
+     * TypeORM Hooks를 사용하지 않는 경우에는 delete() 메서드를 사용하는 것이 성능 상 이점이 있다.
+     */
+    return this.usersRepository.remove(user);
+  }
 }
