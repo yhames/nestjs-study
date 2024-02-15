@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { MaxLengthPipe, MinLengthPipe } from './pipe/password.pipe';
 import { BasicTokenGuard } from './guard/basic-token.guard';
 import { RefreshTokenGuard } from './guard/bearer-token.guard';
+import { RegisterAuthDto } from './dto/register-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,12 +34,7 @@ export class AuthController {
   }
 
   @Post('register/email')
-  async postRegisterEmail(
-    @Body('nickname') nickname: string,
-    @Body('email') email: string,
-    @Body('password', new MaxLengthPipe(8), new MinLengthPipe(3))
-    password: string,
-  ) {
-    return this.authService.registerWithEmail({ nickname, email, password });
+  async postRegisterEmail(@Body() body: RegisterAuthDto) {
+    return this.authService.registerWithEmail(body);
   }
 }
