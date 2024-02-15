@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -42,8 +42,12 @@ export class PostsController {
     return this.postsService.createPost(userId, body);
   }
 
-  @Put(':id')
-  async putPost(
+  /**
+   * PUT   : 객체 전체를 교체한다.
+   * PATCH : 객체의 일부를 변경한다.
+   */
+  @Patch(':id')
+  async patchPost(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdatePostDto,
   ) {
