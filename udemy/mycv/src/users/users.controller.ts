@@ -18,6 +18,7 @@ import { ResponseUserDto } from './dto/response-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Post('signup')
   async createUser(@Body() body: CreateUserDto) {
     return this.usersService.create(body.email, body.password);
@@ -39,16 +40,19 @@ export class UsersController {
     return user;
   }
 
+  @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Get('/:email')
   async findAllUsers(@Param('email') email: string) {
     return this.usersService.find(email);
   }
 
+  @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Patch('/:id')
   async updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.usersService.update(parseInt(id, 10), body);
   }
 
+  @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Delete('/:id')
   async removeUser(@Param('id') id: string) {
     return this.usersService.remove(parseInt(id, 10));
