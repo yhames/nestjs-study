@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -13,6 +12,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { SerializeInterceptor } from '../interceptors/serialize.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -23,7 +23,13 @@ export class UsersController {
     return this.usersService.create(body.email, body.password);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor) // @Exclude() 데코레이터가 적용된 프로퍼티를 제외하고 반환한다.
+  /**
+   * `@UseInterceptors(ClassSerializerInterceptor)` 데코레이터를 사용하여
+   * Entity의 `@Exclude()` 데코레이터가 붙은 프로퍼티를 숨기면,
+   * 서로 다른 요청에 대해 Response 객체를 다르게 반환할 수 없다.
+   * 따라서 `@UseInterceptors(SerializeInterceptor)`와 같이 커스텀 데코레이터를 사용해야 한다.
+   */
+  @UseInterceptors(SerializeInterceptor)
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.usersService.findOne(parseInt(id, 10));

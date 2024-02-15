@@ -6,7 +6,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -17,7 +16,6 @@ export class User {
   email: string;
 
   @Column()
-  @Exclude() // JSON으로 변환할 때 password 프로퍼티를 제외한다.
   password: string;
 
   @AfterInsert()
