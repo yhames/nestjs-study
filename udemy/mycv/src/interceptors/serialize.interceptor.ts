@@ -7,7 +7,11 @@ import {
 import { map, Observable } from 'rxjs';
 import { plainToInstance } from 'class-transformer';
 
-export function Serialize(responseDto: any) {
+interface ClassConstructor {
+  new (...args: any[]): object;
+}
+
+export function Serialize(responseDto: ClassConstructor) {
   return UseInterceptors(new SerializeInterceptor(responseDto));
 }
 
