@@ -11,6 +11,7 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true, // string -> number, boolean 등으로 자동 변환하는 옵션
       },
+      whitelist: true, // 데코레이터가 없는 속성은 제거하는 옵션
     }),
   );
   await app.listen(3000);
