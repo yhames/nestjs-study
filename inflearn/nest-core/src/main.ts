@@ -12,6 +12,7 @@ async function bootstrap() {
         enableImplicitConversion: true, // string -> number, boolean 등으로 자동 변환하는 옵션
       },
       whitelist: true, // 데코레이터가 없는 속성은 제거하는 옵션
+      forbidNonWhitelisted: true, // 데코레이터가 없는 속성이 있는 경우 요청을 막는 옵션 (예외처리) (whitelist가 true일 때만 작동)
     }),
   );
   await app.listen(3000);
