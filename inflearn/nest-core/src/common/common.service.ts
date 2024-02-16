@@ -162,7 +162,12 @@ export class CommonService {
           `해당하는 필터가 없습니다. ${operator} ${key}`,
         );
       }
-      options[field] = FILTER_MAPPER[operator](value);
+
+      if (operator === 'i_like') {
+        options[field] = FILTER_MAPPER[operator](`%${value}%`);
+      } else {
+        options[field] = FILTER_MAPPER[operator](value);
+      }
     }
 
     return options;
