@@ -26,22 +26,6 @@ export class PostsService {
     return this.commonService.paginate(dto, this.postsRepository, {}, 'posts');
   }
 
-  /**
-   * data: Data[],  // 실제 데이터
-   * total: number  // 전체 데이터의 개수
-   */
-  async pagePaginatePosts(dto: PaginatePostDto) {
-    const [posts, count] = await this.postsRepository.findAndCount({
-      relations: ['author'],
-      take: dto.take,
-      skip: dto.take * (dto.page - 1),
-      order: {
-        createdAt: dto.order__createAt,
-      },
-    });
-    return { data: posts, total: count };
-  }
-
   async getPostById(id: number) {
     const post = await this.postsRepository.findOne({
       where: {
