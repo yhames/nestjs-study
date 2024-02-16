@@ -12,7 +12,7 @@ import { HOST, PROTOCOL } from './const/env.const';
 
 @Injectable()
 export class CommonService {
-  paginate<T extends BaseModel>(
+  async paginate<T extends BaseModel>(
     dto: BasePaginationDto,
     repository: Repository<T>,
     overrideFindOptions: FindManyOptions<T> = {},
