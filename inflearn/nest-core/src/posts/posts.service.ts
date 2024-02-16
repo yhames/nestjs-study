@@ -20,6 +20,30 @@ export class PostsService {
     });
   }
 
+  async paginatePosts(dto: PaginatePostDto) {
+    if (dto.page) {
+      return this.pagePaginatePosts(dto);
+    } else {
+      return this.cursorPaginatePosts(dto);
+    }
+  }
+
+  /**
+   * data: Data[],  // 실제 데이터
+   * total: number  // 전체 데이터의 개수
+   */
+  async pagePaginatePosts(dto: PaginatePostDto) {
+    const [posts, count] = await this.postsRepository.findAndCount({
+      relations: ['author'],
+      take: dto.take,
+      skip: dto.take * (dto.page - 1),
+      order: {
+        createdAt: dto.order__createAt,
+      },
+    });
+    return { data: posts, total: count };
+  }
+
   /**
    * data: Data[],
    * cursor: {
@@ -30,7 +54,7 @@ export class PostsService {
    *
    * 1. 오름차순 정렬하는 Pagination을 구현한다.
    */
-  async paginatePosts(dto: PaginatePostDto) {
+  async cursorPaginatePosts(dto: PaginatePostDto) {
     const where: FindOptionsWhere<PostsModel> = {};
 
     if (dto.where__id_less_than) {
