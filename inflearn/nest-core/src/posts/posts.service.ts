@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginatePostDto } from './dto/paginate-post.dto';
+import { HOST, PROTOCOL } from '../common/const/env.const';
 
 @Injectable()
 export class PostsService {
@@ -39,7 +40,34 @@ export class PostsService {
       },
       take: dto.take,
     });
-    return { data: posts };
+
+    // 해당되는 포스트가 0개 이상이면, 마지막 포스트를 가져오고, 그렇지 않으면 null을 반환한다.
+    const lastItem = posts.length > 0 ? posts[posts.length - 1] : null;
+
+    const nextUrl = lastItem && new URL(`${PROTOCOL}://${HOST}/posts`);
+
+    if (nextUrl) {
+      for (const key of Object.keys(dto)) {
+        if (dto[key]) {
+          if (key !== 'where__id_more_than') {
+            nextUrl.searchParams.append(key, dto[key]);
+          }
+        }
+      }
+      nextUrl.searchParams.append(
+        'where__id_more_than',
+        lastItem.id.toString(),
+      );
+    }
+
+    return {
+      data: posts,
+      cursor: {
+        after: lastItem?.id,
+      },
+      count: posts.length,
+      next: nextUrl?.toString(),
+    };
   }
 
   async getPostById(id: number) {
