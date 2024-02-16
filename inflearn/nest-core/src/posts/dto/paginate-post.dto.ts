@@ -7,8 +7,12 @@ export class PaginatePostDto {
   @IsOptional()
   where__id_more_than?: number;
 
+  @IsNumber()
+  @IsOptional()
+  where__id_less_than?: number;
+
   // 정렬 기준, 오름차순
-  @IsIn(['ASC'])
+  @IsIn(['ASC', 'DESC'])
   @IsOptional()
   order__createAt: 'ASC' | 'DESC' = 'ASC';
 
