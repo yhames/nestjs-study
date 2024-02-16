@@ -6,12 +6,14 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginatePostDto } from './dto/paginate-post.dto';
 import { HOST, PROTOCOL } from '../common/const/env.const';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @InjectRepository(PostsModel)
-    private postsRepository: Repository<PostsModel>,
+    private readonly postsRepository: Repository<PostsModel>,
+    private readonly commonService: CommonService,
   ) {}
 
   async getAllPosts() {
@@ -21,11 +23,7 @@ export class PostsService {
   }
 
   async paginatePosts(dto: PaginatePostDto) {
-    if (dto.page) {
-      return this.pagePaginatePosts(dto);
-    } else {
-      return this.cursorPaginatePosts(dto);
-    }
+    return this.commonService.paginate(dto, this.postsRepository, {}, 'posts');
   }
 
   /**
@@ -42,68 +40,6 @@ export class PostsService {
       },
     });
     return { data: posts, total: count };
-  }
-
-  /**
-   * data: Data[],
-   * cursor: {
-   *   after: 마지막 Data의 id,
-   * },
-   * count: 응답한 데이터의 개수,
-   * next: 다음 요청시 사용할 URL
-   *
-   * 1. 오름차순 정렬하는 Pagination을 구현한다.
-   */
-  async cursorPaginatePosts(dto: PaginatePostDto) {
-    const where: FindOptionsWhere<PostsModel> = {};
-
-    if (dto.where__id_less_than) {
-      where.id = LessThan(dto.where__id_more_than);
-    } else if (dto.where__id_more_than) {
-      where.id = MoreThan(dto.where__id_more_than);
-    }
-
-    const posts = await this.postsRepository.find({
-      where,
-      order: {
-        createdAt: dto.order__createAt,
-      },
-      take: dto.take,
-    });
-
-    // 해당되는 포스트가 0개 이상이면, 마지막 포스트를 가져오고, 그렇지 않으면 null을 반환한다.
-    const lastItem =
-      posts.length > 0 && posts.length === dto.take
-        ? posts[posts.length - 1]
-        : null;
-
-    const nextUrl = lastItem && new URL(`${PROTOCOL}://${HOST}/posts`);
-
-    if (nextUrl) {
-      for (const key of Object.keys(dto)) {
-        if (dto[key]) {
-          if (key !== 'where__id_more_than' && key !== 'where__id_less_than') {
-            nextUrl.searchParams.append(key, dto[key]);
-          }
-        }
-      }
-      let key = null;
-      if (dto.order__createAt === 'ASC') {
-        key = 'where__id_more_than';
-      } else {
-        key = 'where__id_less_than';
-      }
-      nextUrl.searchParams.append(key, lastItem.id.toString());
-    }
-
-    return {
-      data: posts,
-      cursor: {
-        after: lastItem?.id ?? null,
-      },
-      count: posts.length,
-      next: nextUrl?.toString() ?? null,
-    };
   }
 
   async getPostById(id: number) {
