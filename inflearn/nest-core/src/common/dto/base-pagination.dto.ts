@@ -18,7 +18,7 @@ export class BasePaginationDto {
   // 정렬 기준, 오름차순
   @IsIn(['ASC', 'DESC'])
   @IsOptional()
-  order__createAt: 'ASC' | 'DESC' = 'ASC';
+  order__createdAt: 'ASC' | 'DESC' = 'ASC';
 
   // 가져올 데이터의 개수
   @IsNumber()
