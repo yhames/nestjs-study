@@ -158,7 +158,7 @@ export class AuthService {
     user: Pick<UsersModel, 'email' | 'password'>,
   ) {
     const existingUser = await this.usersService.getUserByEmail(user.email);
-    if (!user) {
+    if (!existingUser) {
       throw new UnauthorizedException('존재하지 않는 사용자입니다.');
     }
 
