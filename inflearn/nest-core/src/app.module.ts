@@ -17,6 +17,7 @@ import {
   ENV_DB_PORT_KEY,
   ENV_DB_USERNAME_KEY,
 } from './common/const/env-keys.const';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import {
     AppService,
     {
       provide: APP_INTERCEPTOR, // 전역적으로 사용할 수 있는 인터셉터
-      useClass: ClassSerializerInterceptor,
+      useClass: ClassSerializerInterceptor, // @Exclude() 데코레이터를 사용한 필드를 숨긴다.
     },
   ],
 })
