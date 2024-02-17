@@ -20,7 +20,7 @@ export class UsersModel extends BaseModel {
 
   @Column({ unique: true })
   @IsString({ message: stringValidationMessage })
-  @IsEmail(null, { message: emailValidationMessage })
+  @IsEmail({}, { message: emailValidationMessage }) // options에 null이 들어오면 에러가 발생한다.
   email: string;
 
   @Column()

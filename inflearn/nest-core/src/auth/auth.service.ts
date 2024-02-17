@@ -117,7 +117,7 @@ export class AuthService {
   async registerWithEmail(user: RegisterAuthDto) {
     const hash = await bcrypt.hash(
       user.password,
-      this.configService.get<string>(ENV_HASH_ROUNDS_KEY),
+      parseInt(this.configService.get<string>(ENV_HASH_ROUNDS_KEY)), // get<T>()에서 T를 number로 지정하면 에러가 발생한다.
     );
     const newUser = await this.usersService.createUser({
       ...user,
