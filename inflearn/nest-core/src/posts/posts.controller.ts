@@ -40,13 +40,12 @@ export class PostsController {
    */
   @Post()
   @UseGuards(AccessTokenGuard)
-  @UseInterceptors(FileInterceptor('image')) // `image`라는 이름으로 파일을 받는다.
   async postPosts(
     @User('id') userId: number, // `AccessTokenGuard`을 통해 `request`에 저장된 `user`를 가져온다.
     @Body() body: CreatePostDto,
-    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.postsService.createPost(userId, body, file?.filename);
+    await this.postsService.createPostImage(body); // TODO: Transaction
+    return this.postsService.createPost(userId, body);
   }
 
   /**
