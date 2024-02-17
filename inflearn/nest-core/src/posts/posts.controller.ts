@@ -8,7 +8,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AccessTokenGuard } from '../auth/guard/bearer-token.guard';
@@ -16,6 +18,7 @@ import { User } from '../users/decorator/users.decorator';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PaginatePostDto } from './dto/paginate-post.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 export class PostsController {
@@ -37,11 +40,13 @@ export class PostsController {
    */
   @Post()
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(FileInterceptor('image')) // `image`라는 이름으로 파일을 받는다.
   async postPosts(
     @User('id') userId: number, // `AccessTokenGuard`을 통해 `request`에 저장된 `user`를 가져온다.
     @Body() body: CreatePostDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.postsService.createPost(userId, body);
+    return this.postsService.createPost(userId, body, file?.filename);
   }
 
   /**
