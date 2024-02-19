@@ -28,6 +28,11 @@ export class UsersController {
     return this.authService.signUp(body.email, body.password);
   }
 
+  @Post('singin')
+  async signIn(@Body() body: CreateUserDto) {
+    return this.authService.signIn(body.email, body.password);
+  }
+
   /**
    * `@UseInterceptors(ClassSerializerInterceptor)` 데코레이터를 사용하여
    * Entity의 `@Exclude()` 데코레이터가 붙은 프로퍼티를 숨기면,
