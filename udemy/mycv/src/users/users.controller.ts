@@ -13,15 +13,19 @@ import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { ResponseUserDto } from './dto/response-user.dto';
+import { AuthService } from './auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Post('signup')
   async createUser(@Body() body: CreateUserDto) {
-    return this.usersService.create(body.email, body.password);
+    return this.authService.signUp(body.email, body.password);
   }
 
   /**
