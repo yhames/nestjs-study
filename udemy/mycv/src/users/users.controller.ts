@@ -41,13 +41,21 @@ export class UsersController {
 
   @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Post('signup')
-  async createUser(@Body() body: CreateUserDto) {
-    return this.authService.signUp(body.email, body.password);
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signUp(body.email, body.password);
+    session.userId = user.id;
+    return user;
   }
 
   @Post('singin')
-  async signIn(@Body() body: CreateUserDto) {
-    return this.authService.signIn(body.email, body.password);
+  async signIn(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signIn(body.email, body.password);
+    /**
+     * `/signUp` 이후에 바로 `/signIn`을 호출하면, 응답 헤더에 `Set-Cookie`가 포함되어 있지 않다.
+     * 이는 session 객체가 변경되지 않았기 때문이다. session 객체를 변경할 때에만 응답 헤더에 `Set-Cookie`가 포함된다.
+     */
+    session.userId = user.id;
+    return user;
   }
 
   /**
