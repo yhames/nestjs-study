@@ -39,6 +39,16 @@ export class UsersController {
     return session.color;
   }
 
+  @Get('whoami')
+  whoAmI(@Session() session: any) {
+    return this.usersService.findOne(session.userId);
+  }
+
+  @Post('signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
+  }
+
   @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Post('signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
@@ -47,7 +57,7 @@ export class UsersController {
     return user;
   }
 
-  @Post('singin')
+  @Post('signin')
   async signIn(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signIn(body.email, body.password);
     /**
@@ -75,8 +85,8 @@ export class UsersController {
   }
 
   @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
-  @Get('/:email')
-  async findAllUsers(@Param('email') email: string) {
+  @Get()
+  async findAllUsers(@Body('email') email: string) {
     return this.usersService.find(email);
   }
 

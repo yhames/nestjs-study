@@ -29,7 +29,7 @@ export class AuthService {
     const result = salt + '.' + hash.toString('hex'); // salt와 해시값을 합친다. (salt는 해시값을 decode할 때 사용된다.)
 
     // Create a new user and return it
-    return await this.usersService.create(email, result);
+    return this.usersService.create(email, result);
   }
 
   async signIn(email: string, password: string) {
