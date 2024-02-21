@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Session,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -15,8 +16,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Serialize } from '../interceptors/serialize.interceptor';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { User } from './users.entity';
 
 @Controller('auth')
+@UseInterceptors(CurrentUserInterceptor) // @CurrentUser 데코레이터를 사용하기 위해 CurrentUserInterceptor를 사용한다.
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
@@ -40,8 +45,8 @@ export class UsersController {
   }
 
   @Get('whoami')
-  whoAmI(@Session() session: any) {
-    return this.usersService.findOne(session.userId);
+  whoAmI(@CurrentUser() user: User) {
+    return user;
   }
 
   @Post('signout')
