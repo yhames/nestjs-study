@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Session,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -15,12 +16,28 @@ import { Serialize } from '../interceptors/serialize.interceptor';
 import { ResponseUserDto } from './dto/response-user.dto';
 import { AuthService } from './auth.service';
 
-@Controller('users')
+@Controller('auth')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
   ) {}
+
+  /**
+   * 세션 저장소에 색상을 저장한다.
+   */
+  @Get('/colors/:color')
+  setColor(@Param('color') color: string, @Session() session: any) {
+    session.color = color;
+  }
+
+  /**
+   * 세션 저장소에서 색상을 가져온다.
+   */
+  @Get('/colors')
+  getColor(@Session() session: any) {
+    return session.color;
+  }
 
   @Serialize(ResponseUserDto) // SerializeInterceptor를 사용하여 Response 객체를 변환한다.
   @Post('signup')
