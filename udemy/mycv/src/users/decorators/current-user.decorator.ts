@@ -6,6 +6,6 @@ export const CurrentUser = createParamDecorator(
    */
   (data: never, context: ExecutionContext) => {
     const request = context.switchToHttp().getRequest();
-    return request.currentUser;
+    return request.currentUser; // currentUser는 CurrentUserInterceptor에서 생성한다.
   },
 );
