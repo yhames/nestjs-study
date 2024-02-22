@@ -9,12 +9,23 @@ describe('AuthService', () => {
   let mockUsersService: Partial<UsersService>;
 
   beforeEach(async () => {
+    const users: User[] = [];
     // Create a fake copy of the UsersService
     // Partial을 사용하여 Mock 객체를 생성할 때 TypeScript가 각 메서드의 반환 타입을 추론할 수 있도록 한다.
     mockUsersService = {
-      find: () => Promise.resolve([]),
-      create: (email: string, password: string) =>
-        Promise.resolve({ id: 1, email, password } as User),
+      find: (email: string) => {
+        const filteredUsers = users.filter((user) => user.email === email);
+        return Promise.resolve(filteredUsers);
+      },
+      create: (email: string, password: string) => {
+        const user = {
+          id: Math.floor(Math.random() * 99999999),
+          email,
+          password,
+        } as User;
+        users.push(user);
+        return Promise.resolve(users[users.length - 1]);
+      },
     };
 
     const module = await Test.createTestingModule({
@@ -67,14 +78,8 @@ describe('AuthService', () => {
   });
 
   it('returns a user if correct password is provided', async () => {
-    const email: string = 'test@test.com';
-    const password: string = 'qwer1234';
-    const user = await authService.signUp(email, password);
-    const hashedPassword = user.password;
-    mockUsersService.find = () =>
-      Promise.resolve([{ email, password: hashedPassword } as User]);
-
-    await authService.signIn('test@test. com', 'qwer1234');
+    await authService.signUp('test@test.com', 'qwer1234');
+    const user = await authService.signIn('test@test.com', 'qwer12341');
     expect(user).toBeDefined();
   });
 });
