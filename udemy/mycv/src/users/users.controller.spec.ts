@@ -29,7 +29,9 @@ describe('UsersController', () => {
     };
     mockAuthService = {
       // signUp: () => {},
-      // signIn: () => {},
+      signIn: (email: string, password: string) => {
+        return Promise.resolve({ id: 1, email, password } as User);
+      },
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -66,5 +68,15 @@ describe('UsersController', () => {
   it('findUser throws an error if user with given id is not found', async () => {
     mockUsersService.findOne = () => null;
     await expect(controller.findUser('1')).rejects.toThrow(NotFoundException);
+  });
+
+  it('signIn updates session object and returns user', async () => {
+    const session = { userId: -10 };
+    const user = await controller.signIn(
+      { email: 'test@test.com', password: 'qwer1234' },
+      session,
+    );
+    expect(user).toBeDefined();
+    expect(session.userId).toEqual(1);
   });
 });
