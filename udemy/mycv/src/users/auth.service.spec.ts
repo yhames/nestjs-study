@@ -46,40 +46,63 @@ describe('AuthService', () => {
   });
 
   it('creates a new user with a salted and hased password', async () => {
-    const user = await authService.signUp('test@test.com', 'qwer1234');
-    expect(user.password).not.toEqual('qwer1234');
+    // given
+    const email: string = 'test@test.com';
+    const password: string = 'qwer1234';
+
+    // when
+    const user = await authService.signUp(email, password);
     const [salt, hash] = user.password.split('.');
+
+    // then
+    expect(user.password).not.toEqual(password);
     expect(salt).toBeDefined();
     expect(hash).toBeDefined();
   });
 
   it('throws an error if user signs up with email that is in use', async () => {
-    mockUsersService.find = () =>
-      Promise.resolve([{ id: 1, email: 'a', password: 'b' } as User]);
-    await expect(
-      authService.signUp('test@test.com', 'qwer1234'),
-    ).rejects.toThrow(BadRequestException);
+    // given
+    const email: string = 'test@test.com';
+    const password: string = 'qwer1234';
+    await authService.signUp(email, password);
+
+    // expected
+    await expect(authService.signUp(email, password)).rejects.toThrow(
+      BadRequestException,
+    );
   });
 
   it('throws if signIn is called with an unused email', async () => {
-    await expect(
-      authService.signIn('test@test.com', 'qwer1234'),
-    ).rejects.toThrow(NotFoundException);
+    // given
+    const email: string = 'test@test.com';
+    const password: string = 'qwer1234';
+
+    // expected
+    await expect(authService.signIn(email, password)).rejects.toThrow(
+      NotFoundException,
+    );
   });
 
   it('throws if an invalid password is provided', async () => {
-    mockUsersService.find = () =>
-      Promise.resolve([
-        { email: 'test@test.com', password: 'salted_password' } as User,
-      ]);
-    await expect(
-      authService.signIn('test@test.com', 'qwer1234'),
-    ).rejects.toThrow(BadRequestException);
+    // given
+    const email: string = 'test@test.com';
+    const password: string = 'qwer1234';
+    await authService.signUp(email, password);
+
+    // expected
+    await expect(authService.signIn(email, 'InvalidPassword')).rejects.toThrow(
+      BadRequestException,
+    );
   });
 
   it('returns a user if correct password is provided', async () => {
-    await authService.signUp('test@test.com', 'qwer1234');
-    const user = await authService.signIn('test@test.com', 'qwer12341');
+    // given
+    const email: string = 'test@test.com';
+    const password: string = 'qwer1234';
+    await authService.signUp(email, password);
+
+    // expected
+    const user = await authService.signIn(email, password);
     expect(user).toBeDefined();
   });
 });
