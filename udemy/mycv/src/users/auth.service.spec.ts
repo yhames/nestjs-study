@@ -65,4 +65,16 @@ describe('AuthService', () => {
       authService.signIn('test@test.com', 'qwer1234'),
     ).rejects.toThrow(BadRequestException);
   });
+
+  it('returns a user if correct password is provided', async () => {
+    const email: string = 'test@test.com';
+    const password: string = 'qwer1234';
+    const user = await authService.signUp(email, password);
+    const hashedPassword = user.password;
+    mockUsersService.find = () =>
+      Promise.resolve([{ email, password: hashedPassword } as User]);
+
+    await authService.signIn('test@test. com', 'qwer1234');
+    expect(user).toBeDefined();
+  });
 });
