@@ -15,8 +15,6 @@ describe('Authentication System', () => {
     await app.init();
   });
 
-  afterEach(async () => {});
-
   it('handles a signup request', () => {
     const email: string = 'testasdf@test.com';
     const password: string = 'qwer1234';
