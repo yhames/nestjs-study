@@ -15,9 +15,9 @@ describe('Authentication System', () => {
     await app.init();
   });
 
-  it('handls a signup request', () => {
-    const email = 'test@test.com';
-    const password = 'qwer1234';
+  it('handles a signup request', () => {
+    const email: string = 'testasdf@test.com';
+    const password: string = 'qwer1234';
 
     return request(app.getHttpServer())
       .post('/auth/signup')
