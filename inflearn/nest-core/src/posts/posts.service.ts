@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostsModel } from './entities/posts.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -18,8 +18,6 @@ export class PostsService {
   constructor(
     @InjectRepository(PostsModel)
     private readonly postsRepository: Repository<PostsModel>,
-    @InjectRepository(ImageModel)
-    private readonly imageRepository: Repository<ImageModel>,
     private readonly commonService: CommonService,
   ) {}
 
@@ -53,8 +51,21 @@ export class PostsService {
     return post;
   }
 
-  async createPost(authorId: number, createPostDto: CreatePostDto) {
-    const post = this.postsRepository.create({
+  getRepository(qr?: QueryRunner) {
+    if (qr) {
+      return qr.manager.getRepository<PostsModel>(PostsModel);
+    }
+    return this.postsRepository;
+  }
+
+  async createPost(
+    authorId: number,
+    createPostDto: CreatePostDto,
+    qr?: QueryRunner,
+  ) {
+    const repository = this.getRepository(qr);
+
+    const post = repository.create({
       author: {
         id: authorId,
       },
@@ -63,33 +74,7 @@ export class PostsService {
       likeCount: 0,
       commentCount: 0,
     });
-    return this.postsRepository.save(post);
-  }
-
-  async createPostImage(dto: CreatePostImageDto) {
-    const tempFilePath = join(TEMP_FOLDER_PATH, dto.path);
-
-    try {
-      await promises.access(tempFilePath); // 파일이 존재하지 않으면 에러가 발생한다.
-    } catch (e) {
-      throw new NotFoundException('파일이 존재하지 않습니다.');
-    }
-
-    // 파일 이름을 추출한다. (ex: /public/temp/{uuid}.jpg -> {uuid}.jpg)
-    const fileName = basename(tempFilePath);
-
-    // 이동할 경로를 생성한다.  (ex: /public/posts/{uuid}.jpg)
-    const newPath = join(POST_IMAGE_PATH, fileName);
-
-    // save
-    const result = await this.imageRepository.save({
-      ...dto,
-    });
-
-    // 파일을 이동한다.
-    await promises.rename(tempFilePath, newPath);
-
-    return result;
+    return repository.save(post);
   }
 
   async updatePost(id: number, updatePostDto: UpdatePostDto) {
