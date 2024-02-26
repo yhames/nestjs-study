@@ -4,7 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { map, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class LogInterceptor implements NestInterceptor {
@@ -22,6 +22,7 @@ export class LogInterceptor implements NestInterceptor {
     /**
      * pipe()의 인자로 `OperatorFunction`을 넘겨주면 함수들이 파이프라인으로 연결되어 순차적으로 실행된다.
      * @see https://rxjs.dev/api/index/function/pipe
+     * @see https://rxjs.dev/guide/operators#categories-of-operators
      */
     return next
       .handle()
