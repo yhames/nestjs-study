@@ -9,6 +9,16 @@ import {
 } from 'typeorm';
 import { Report } from '../reports/reports.entity';
 
+/**
+ * Circular Dependency
+ *
+ * it will be printed correctly
+ * because the code of the Report entity is executed first
+ *
+ * this is why the @OneToMany decorator has referenced function instead of class itself
+ */
+// console.log(Report);
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
