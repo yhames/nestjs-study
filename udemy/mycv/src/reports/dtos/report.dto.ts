@@ -1,5 +1,4 @@
-import { User } from '../../users/users.entity';
-import { Exclude, Expose, Transform } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 
 export class ReportDto {
   @Expose()
@@ -23,8 +22,8 @@ export class ReportDto {
   @Expose()
   mileage: number;
 
-  @Exclude()
-  user: User;
+  @Expose()
+  approved: boolean;
 
   @Expose()
   @Transform(({ obj }) => obj.user.id) // obj is original report entity
