@@ -38,6 +38,6 @@ export class ReportsController {
 
   @Get()
   async getEstimate(@Query() query: GetEstimateDto) {
-    console.log(query);
+    return this.reportsService.createEstimate(query);
   }
 }
