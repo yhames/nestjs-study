@@ -1,8 +1,8 @@
 let dbConfig = {
   synchronize: false,
-  migrations: ['migrations/*.js'],
+  migrations: [__dirname + '/migrations/*.ts'],
   cli: {
-    migrationsDir: 'migrations',
+    migrationsDir: __dirname + '/migrations',
   },
 };
 
