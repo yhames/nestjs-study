@@ -1,8 +1,8 @@
 let dbConfig = {
   synchronize: false,
-  migrations: [__dirname + '/migrations/*.ts'],
+  migrations: [__dirname + '/migrations/*.ts'], // 1) __dirname 사용해서 dist경로 문제 해결, 2) .js -> .ts로 변경
   cli: {
-    migrationsDir: __dirname + '/migrations',
+    migrationsDir: __dirname + '/migrations', // 1) __dirname 사용해서 dist경로 문제 해결
   },
 };
 
