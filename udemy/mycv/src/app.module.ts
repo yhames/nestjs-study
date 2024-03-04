@@ -43,11 +43,13 @@ const cookieSession = require('cookie-session');
   ],
 })
 export class AppModule {
+  constructor(private readonly configService: ConfigService) {}
+
   configure(consumer: MiddlewareConsumer) {
     consumer // 전역 범위에 미들웨어를 적용한다.
       .apply(
         cookieSession({
-          keys: ['jeongwpa'], // using encrypt key
+          keys: [this.configService.get('COOKIE_KEY')], // using encrypt key
         }),
       )
       .forRoutes('*'); // 모든 경로에 미들웨어를 적용한다.
