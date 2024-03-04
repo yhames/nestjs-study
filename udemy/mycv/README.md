@@ -24,50 +24,55 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[NestJS : 개발자를 위한 완벽 가이드 2024](https://www.udemy.com/course/nestjs-complete-developers-guide-korean/?couponCode=KEEPLEARNING) 예제 코드
 
-## Installation
+## Setup
 
-```bash
-$ npm install
-```
+본 예제코드는 Heroku에 배포하기 위한 설정이 되어있습니다.
 
-## Running the app
+Heroku에 배포하기 위해서는 다음과 같은 설정이 필요합니다.
 
-```bash
-# development
-$ npm run start
+### Heroku 프로젝트 생성
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
+새로운 Heroku 프로젝트를 생성합니다.
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ heroku create
 ```
 
-## Support
+위 명령어를 실행하면 프로젝트 URL이 생성됩니다.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Heroku Database 생성
 
-## Stay in touch
+Heroku에 Database를 생성합니다.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+hobby-dev는 무료로 사용할 수 있는 데이터베이스입니다.
 
-## License
+```bash
+$ heroku addons:create heroku-postgresql:hobby-dev
+```
 
-Nest is [MIT licensed](LICENSE).
+위 명령어를 사용하면 DATABASE_URL 환경변수가 자동으로 생성됩니다.
+
+DATABASE_URL 환경변수는 ormconfig.js에서 사용됩니다.
+
+### Heroku 환경변수 설정
+
+프로젝트에서 사용할 환경변수들을 설정합니다.
+
+```bash
+heroku config:set COOKIE_KEY={secret_key}
+```
+```bash
+heroku config:set NODE_ENV=production
+```
+
+### Heroku 배포
+
+모든 변경사항을 Heroku의 Git repository에 push 합니다.
+
+```bash
+git push heroku master
+```
+
+위 명령어를 실행하면 프로젝트 빌드 결과가 출력 됩니다.
