@@ -7,6 +7,9 @@ import {
 import { Observable, tap } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
+/**
+ * @ref https://github.com/mguay22/nestjs-metrics/blob/main/src/logging.interceptor.ts
+ */
 export default class LogInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LogInterceptor.name);
 
