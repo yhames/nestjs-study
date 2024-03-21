@@ -7,7 +7,7 @@
 NestJS에서 Prometheus와 Grafana 연동하는 방법에 대해 알아보려고 합니다.
 
 > 참고자료  
-> [Best Server Monitoring with Prometheus and Grafana using Node Exporter and cAdvisor](https://www.youtube.com/watch?v=RAqMP_NnGec)
+> [Best Server Monitoring with Prometheus and Grafana using Node Exporter and cAdvisor](https://www.youtube.com/watch?v=RAqMP_NnGec)  
 > [Nest.js Metrics - Prometheus & Grafana Tutorial](https://www.youtube.com/watch?v=2ESOGJTXv1s&t=162s)  
 > [시스템 메트릭 모니터링하기 (1) node-exporter](https://gurumee92.tistory.com/225)  
 > [grafana monitoring with nestjs](https://velog.io/@l\eejm_dev/grafana-monitoring-with-nestjs)
