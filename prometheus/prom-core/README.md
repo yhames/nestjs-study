@@ -49,3 +49,11 @@ process_start_time_seconds 1710996600
 
 # ...
 ```
+
+## Logging
+
+LogInterceptor를 사용해서 모든 요청에 대한 로그를 남깁니다.
+
+LogInterceptor 코드는 Nest.js Metrics 영상에서 제공하는 코드를 사용했습니다.
+
+> [mguay22/nestjs-metrics](https://github.com/mguay22/nestjs-metrics/blob/main/src/logging.interceptor.ts)
