@@ -7,53 +7,7 @@
 NestJS에서 Prometheus와 Grafana 연동하는 방법에 대해 알아보려고 합니다.
 
 > 참고자료  
-> [Nest.js Metrics - Prometheus & Grafana Tutorial](https://www.youtube.com/watch?v=2ESOGJTXv1s&t=162s)
-
-## Install Prometheus
-
-먼저 CLI로 [nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus)를 설치합니다.
-
-```bash
-npm install @willsoto/nestjs-prometheus prom-client
-```
-
-app.module.ts에 PrometheusModule를 import합니다.
-
-```typescript
-@Module({
-  imports: [PrometheusModule.register()],
-  controllers: [AppController],
-  providers: [AppService],
-})
-export class AppModule {}
-```
-
-Postman이나 브라우저에서 `GET /metrics` 요청을 보내면 기본적인 Metrics 정보를 확인할 수 있습니다.
-
-```bash
-# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
-# TYPE process_cpu_user_seconds_total counter
-process_cpu_user_seconds_total 0.331612
-
-# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
-# TYPE process_cpu_system_seconds_total counter
-process_cpu_system_seconds_total 0.142212
-
-# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
-# TYPE process_cpu_seconds_total counter
-process_cpu_seconds_total 0.473824
-
-# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
-# TYPE process_start_time_seconds gauge
-process_start_time_seconds 1710996600
-
-# ...
-```
-
-## Logging
-
-LogInterceptor를 사용해서 모든 요청에 대한 로그를 남깁니다.
-
-LogInterceptor 코드는 Nest.js Metrics 영상에서 제공하는 코드를 사용했습니다.
-
-> [mguay22/nestjs-metrics](https://github.com/mguay22/nestjs-metrics/blob/main/src/logging.interceptor.ts)
+> [Best Server Monitoring with Prometheus and Grafana using Node Exporter and cAdvisor](https://www.youtube.com/watch?v=RAqMP_NnGec)
+> [Nest.js Metrics - Prometheus & Grafana Tutorial](https://www.youtube.com/watch?v=2ESOGJTXv1s&t=162s)  
+> [시스템 메트릭 모니터링하기 (1) node-exporter](https://gurumee92.tistory.com/225)  
+> [grafana monitoring with nestjs](https://velog.io/@l\eejm_dev/grafana-monitoring-with-nestjs)
